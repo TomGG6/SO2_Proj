@@ -79,3 +79,7 @@ void Car::set_laps(int less_laps) {
 bool Car::get_is_first_circuit() {
     return is_first_circuit;
 }
+
+int Car::get_speed() {
+    return speed;
+}

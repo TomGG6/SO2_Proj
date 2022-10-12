@@ -10,6 +10,7 @@ class Car{
     std::string direction;
 
 public:
+    int id;
     Car(int speed, int cord_x, int cord_y, bool is_first_circuit);
     ~Car();
     void reach_corner();
@@ -22,4 +23,5 @@ public:
     int get_laps();
     void set_laps(int less_laps);
     bool get_is_first_circuit();
+    int get_speed();
 };
