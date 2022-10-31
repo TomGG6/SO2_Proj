@@ -1,2 +1,0 @@
-g++ *.hpp *.cpp  -lncurses -o main
-./main

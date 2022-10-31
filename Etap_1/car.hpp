@@ -1,17 +1,18 @@
-#include <string>
+#include "direction.hpp"
 
-class Car{
+class Car {
     const char * body;
+    int id;
+    int color;
     int speed;
     int cord_x;
     int cord_y;
     int laps;
     bool is_first_circuit;
-    std::string direction;
+    Direction direction;
 
 public:
-    int id;
-    Car(int speed, int cord_x, int cord_y, bool is_first_circuit);
+    Car(int id, int color, int speed, int cord_x, int cord_y, bool is_first_circuit);
     ~Car();
     void reach_corner();
     void change_direction();
@@ -21,7 +22,9 @@ public:
     int get_cord_y();
     const char * get_body();
     int get_laps();
-    void set_laps(int less_laps);
     bool get_is_first_circuit();
     int get_speed();
+    int get_id();
+    int get_color();
+    Direction get_direction();
 };
