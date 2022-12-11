@@ -1,6 +1,3 @@
-#include <condition_variable>
-#include <mutex>
-
 #include "direction.hpp"
 
 class Car {
@@ -19,9 +16,6 @@ class Car {
     bool is_race_ended;
     Direction direction;
 
-    std::condition_variable cv;
-    std::mutex mu;
-
 public:
     Car(int id, int color, int speed, int cord_x, int cord_y, bool is_first_circuit);
     ~Car();
@@ -32,7 +26,6 @@ public:
     void start_car();
     void check_if_is_waiting();
     bool check_if_finished_section();
-    void notify();
 
     int get_cord_x();
     int get_cord_y();
@@ -42,12 +35,8 @@ public:
     int get_speed();
     int get_id();
     int get_color();
-    bool get_is_waiting();
-    void set_is_waiting(bool is_waiting);
     void set_is_race_ended(bool is_race_ended);
     Direction get_direction();
     void set_direction(Direction direction);
-    bool get_can_pass();
-    void set_can_pass(bool can_pass);
     bool get_is_before_section();
 };

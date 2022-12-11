@@ -1,8 +1,6 @@
 #include "car.hpp"
-#include <iostream>
-#include <thread>
 
-bool lk_state = true;
+#include <iostream>
 
 Car::Car(int id, int color, int speed, int cord_x, int cord_y, bool is_first_circuit) {
     this->body = "#";
@@ -15,8 +13,6 @@ Car::Car(int id, int color, int speed, int cord_x, int cord_y, bool is_first_cir
     this->laps = 3;
     this->is_first_circuit = is_first_circuit;
     this->is_waiting = false;
-    this->can_pass = false;
-    this->finished_section = true;
     this->is_before_section = false;
     this->is_race_ended = false;
 }
@@ -57,9 +53,6 @@ void Car::drive() {
     if(!is_race_ended) {
         check_if_is_waiting();
     }
-    // std::unique_lock<std::mutex> lk(mu);
-    // lk_state = !is_waiting;
-    // cv.wait(lk, []{ return lk_state; });
     if(!is_waiting) {
         reach_corner();
         if(direction == Direction::up) {
@@ -96,14 +89,6 @@ bool Car::check_if_finished_section() {
     } else {
         return is_before_section;
     }
-}
-
-void Car::notify() {
-    {
-        std::lock_guard<std::mutex> lk(mu);
-        is_waiting = false;
-    }
-    cv.notify_one();
 }
 
 int Car::get_cord_x() {
@@ -146,24 +131,8 @@ void Car::set_direction(Direction direction) {
     this->direction = direction;
 }
 
-bool Car::get_is_waiting() {
-    return is_waiting;
-}
-
-void Car::set_is_waiting(bool is_waiting) {
-    this->is_waiting = is_waiting;
-}
-
 void Car::set_is_race_ended(bool is_race_ended) {
     this->is_race_ended = true;
-}
-
-bool Car::get_can_pass() {
-    return can_pass;
-}
-
-void Car::set_can_pass(bool can_pass) {
-    this->can_pass = can_pass;
 }
 
 bool Car::get_is_before_section() {
