@@ -1,0 +1,8 @@
+jestem
+id: 0 is_waiting: 1
+id: 1 is_waiting: 1
+id: 2 is_waiting: 1
+id: 3 is_waiting: 1
+id: 4 is_waiting: 1
+id: 5 is_waiting: 1
+id: 6 is_waiting: 1
