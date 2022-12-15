@@ -49,30 +49,29 @@ void Car::change_direction() {
     }
 }
 
-void Car::drive() {
+void Car::drive(int passing_car_id, bool stop_cars) {
     if(!is_race_ended) {
         check_if_is_waiting();
     }
-    if(!is_waiting) {
-        reach_corner();
-        if(direction == Direction::up) {
-            --cord_y;
-        } else if(direction == Direction::right) {
-            ++cord_x;
-        } else if(direction == Direction::down) {
-            ++cord_y;
-        } else if(direction == Direction::left) {
-            --cord_x;
-        }
+    if(passing_car_id != id && stop_cars) {
+        std::unique_lock<std::mutex> lck(car_mu);
+        cv.wait(lck);
+    }
+    reach_corner();
+    if(direction == Direction::up) {
+        --cord_y;
+    } else if(direction == Direction::right) {
+        ++cord_x;
+    } else if(direction == Direction::down) {
+        ++cord_y;
+    } else if(direction == Direction::left) {
+        --cord_x;
     }
 }
 
-void Car::stop_car() {
-    is_waiting = true;
-}
-
-void Car::start_car() {
-    is_waiting = false;
+void Car::notify() {
+    std::lock_guard<std::mutex> lg(car_mu);
+    cv.notify_one();
 }
 
 

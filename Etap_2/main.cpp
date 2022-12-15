@@ -13,6 +13,7 @@
 std::mutex mu;
 
 bool stop_cars = false;
+int passing_car_id = -1;
 
 // std::string raport = "";
 
@@ -72,14 +73,8 @@ int is_someone_waiting(std::vector <Car *> &cars) {
     std::lock_guard<std::mutex> lck(mu);
     for (auto &car : cars) {
         if ((*car).get_is_before_section()) {
-            int passing_car_id = (*car).get_id();
-            for (auto &car : cars) {
-                if ((*car).get_id() != passing_car_id) {
-                    (*car).stop_car();
-                }
-            }
             stop_cars = true;
-            return passing_car_id;
+            return (*car).get_id();
         }
     }
     return -1;
@@ -92,14 +87,14 @@ void check_if_car_finished_section(std::vector <Car*> &cars, int &passing_car_id
     }
 
     for(auto &car : cars) {
-        (*car).start_car();
+        (*car).notify();
     }
     stop_cars = false;
 }
 
 void start_stop_function(std::vector <Car *> &cars, bool &run) {
     while(run) {
-        int passing_car_id = is_someone_waiting(cars);
+        passing_car_id = is_someone_waiting(cars);
         if(passing_car_id != -1) {
             check_if_car_finished_section(cars, passing_car_id, run);
         }
@@ -110,7 +105,7 @@ void driving_function(Car * car, bool &run)
 {
     while (run)
     {
-        (*car).drive();
+        (*car).drive(passing_car_id, stop_cars);
         std::this_thread::sleep_for(std::chrono::milliseconds((*car).get_speed()));
     }
 }
@@ -185,7 +180,7 @@ void end_race(WINDOW* circuits, std::vector<Car *> &cars, bool &run)
     } while (key != 'q' && key != 'Q');
     for (auto &car : cars) {
         (*car).set_is_race_ended(true);
-        // (*car).notify();
+        (*car).notify();
     }
     run = false;
     delwin(circuits);
@@ -199,7 +194,6 @@ int main()
     noecho();
     start_color();
     prepare_color_pairs();
-
     WINDOW *circuits = newwin(38, 38, 1, 2);
     refresh();
 
